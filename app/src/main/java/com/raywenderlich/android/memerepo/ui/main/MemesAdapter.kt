@@ -30,20 +30,29 @@
 
 package com.raywenderlich.android.memerepo.ui.main
 
+import android.content.ClipData
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.FileProvider
 import com.raywenderlich.android.memerepo.R
 import com.raywenderlich.android.memerepo.model.Meme
 import com.squareup.picasso.Picasso
+import java.io.File
 
 class MemesAdapter(private val context: Context) : BaseAdapter() {
 
   var memes = emptyList<Meme>()
+    set(value) {
+      field = value
+      notifyDataSetChanged()
+    }
 
   override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
     var cv = convertView
@@ -53,7 +62,7 @@ class MemesAdapter(private val context: Context) : BaseAdapter() {
     }
 
     val viewHolder = cv!!.tag as ViewHolder
-    viewHolder.bind(memes[position])
+    viewHolder.bind(cv, memes[position])
 
     return cv
   }
@@ -72,13 +81,25 @@ class MemesAdapter(private val context: Context) : BaseAdapter() {
 
   class ViewHolder(private val image: ImageView,
                    private val title: TextView) {
-    fun bind(meme: Meme) {
+    fun bind(view: View, meme: Meme) {
       title.text = meme.title
       Picasso.get()
           .load(meme.url)
           .placeholder(R.drawable.splash_background)
           .error(R.drawable.ic_launcher_foreground)
           .into(image)
+      view.setOnClickListener {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+          type = "image/jpeg"
+          putExtra(Intent.EXTRA_TITLE, meme.title)
+          val uri = Uri.parse(meme.url)
+          putExtra(Intent.EXTRA_STREAM, uri)
+          clipData = ClipData.newUri(view.context.contentResolver, "SMTH",
+              FileProvider.getUriForFile(view.context, "com.raywenderlich.android.memerepo.FileProvider", File(meme.url)))
+          flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        }
+        view.context.startActivity(Intent.createChooser(intent, null))
+      }
     }
   }
 }

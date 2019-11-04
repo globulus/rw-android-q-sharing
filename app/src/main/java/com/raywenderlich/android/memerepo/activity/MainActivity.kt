@@ -28,14 +28,28 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.memerepo
+package com.raywenderlich.android.memerepo.activity
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
+import androidx.core.app.Person
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
+import com.raywenderlich.android.memerepo.R
+import com.raywenderlich.android.memerepo.model.Meme
 import com.raywenderlich.android.memerepo.storage.MemeRepo
 import com.raywenderlich.android.memerepo.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.concurrent.Executors
+
+private val IO_EXECUTOR = Executors.newSingleThreadExecutor()
+
+fun runOnIOThread(action: () -> Unit) {
+  IO_EXECUTOR.execute(action)
+}
 
 class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,9 +60,44 @@ class MainActivity : AppCompatActivity() {
     viewPager.adapter = sectionsPagerAdapter
     tabs.setupWithViewPager(viewPager)
 
-    fab.setOnClickListener { view ->
-      Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-          .setAction("Action", null).show()
+    fab.setOnClickListener {
+      startActivity(Intent(this, MemeActivity::class.java))
     }
+
+    runOnIOThread {
+      publishShareShortcuts()
+    }
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    runOnIOThread {
+      ShortcutManagerCompat.removeAllDynamicShortcuts(this)
+    }
+  }
+
+  private fun publishShareShortcuts() {
+    ShortcutManagerCompat.addDynamicShortcuts(this, Meme.Category.values().map(::categoryToShortcut))
+  }
+
+  private fun categoryToShortcut(category: Meme.Category): ShortcutInfoCompat {
+    return ShortcutInfoCompat.Builder(this, category.id)
+        .setShortLabel(category.name)
+        .setLongLabel(category.name + "LONG")
+        .setPerson(Person.Builder()
+            .setName(category.name)
+            .setKey(category.id)
+            .build())
+        .setIcon(IconCompat.createWithResource(this, R.drawable.ic_launcher_foreground))
+        .setCategories(setOf("com.raywenderlich.android.memerepo.category.MEME_STORE_TARGET"))
+        .setIntent(Intent(this, MemeActivity::class.java).apply {
+          action = Intent.ACTION_SEND
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            putExtra(Intent.EXTRA_SHORTCUT_ID, category.id)
+          }
+        })
+        .setLongLived()
+        .setRank(0)
+        .build()
   }
 }

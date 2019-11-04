@@ -4,7 +4,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context=".MemeActivity">
+  tools:context=".activity.MemeActivity">
 
   <com.google.android.material.appbar.AppBarLayout
     android:layout_width="match_parent"
@@ -20,14 +20,49 @@
 
   </com.google.android.material.appbar.AppBarLayout>
 
-  <include layout="@layout/content_meme" />
-
-  <com.google.android.material.floatingactionbutton.FloatingActionButton
-    android:id="@+id/fab"
-    android:layout_width="wrap_content"
+  <LinearLayout
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="bottom|end"
-    android:layout_margin="@dimen/fab_margin"
-    app:srcCompat="@android:drawable/ic_dialog_email" />
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/memeTitleLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/title" >
+
+      <EditText
+        android:id="@+id/memeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/memeUrlLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/url" >
+
+      <EditText
+        android:id="@+id/url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+      android:id="@+id/imagePreview"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:scaleType="centerCrop" />
+
+    <Spinner
+      android:id="@+id/category"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+
+  </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
