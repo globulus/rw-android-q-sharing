@@ -38,6 +38,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
@@ -60,25 +62,31 @@ class MemeActivity : AppCompatActivity() {
 
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+    memeUri.addTextChangedListener(object : TextWatcher {
+      override fun afterTextChanged(s: Editable?) {
+        Picasso.get().load(memeUri.text.toString()).into(imagePreview)
+      }
+
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {  }
+    })
+
     category.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
         Meme.Category.values().map { it.name }).apply {
       setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
 
-    when {
-      intent?.action == Intent.ACTION_SEND -> {
-        if (intent.type?.startsWith("image/") == true) {
-          (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
-            url.setText(it.toString())
-            Picasso.get().load(it).into(imagePreview)
-          }
+    if (intent?.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true) {
+      (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
+        memeUri.setText(it.toString())
+//            Picasso.get().load(it).into(imagePreview)
+      }
 
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val id = intent.getStringExtra(Intent.EXTRA_SHORTCUT_ID)
-            if (id?.isNotEmpty() == true) {
-              category.setSelection(Meme.Category.positionFor(id))
-            }
-          }
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        val id = intent.getStringExtra(Intent.EXTRA_SHORTCUT_ID)
+        if (id?.isNotEmpty() == true) {
+          category.setSelection(Meme.Category.positionFor(id))
         }
       }
     }
@@ -116,7 +124,7 @@ class MemeActivity : AppCompatActivity() {
     } else {
       memeTitleLayout.error = null
     }
-    val meme = Meme(memeTitle.text.toString(), url.tag.toString(), Meme.Category.values()[category.selectedItemPosition])
+    val meme = Meme(memeTitle.text.toString(), memeUri.tag.toString(), Meme.Category.values()[category.selectedItemPosition])
     MemeRepo.add(meme)
     return true
   }
@@ -129,7 +137,7 @@ class MemeActivity : AppCompatActivity() {
         it.compress(Bitmap.CompressFormat.JPEG, 90, out)
         out.close()
         val bmpUri = Uri.fromFile(file)
-        url.tag = bmpUri?.toString()
+        memeUri.tag = bmpUri?.toString()
       } catch (e: IOException) {
         e.printStackTrace()
       }
