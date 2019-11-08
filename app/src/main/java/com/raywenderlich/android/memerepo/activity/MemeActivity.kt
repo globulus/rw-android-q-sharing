@@ -45,6 +45,7 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.raywenderlich.android.memerepo.R
+import com.raywenderlich.android.memerepo.model.Category
 import com.raywenderlich.android.memerepo.model.Meme
 import com.raywenderlich.android.memerepo.storage.MemeRepo
 import com.squareup.picasso.Picasso
@@ -73,7 +74,7 @@ class MemeActivity : AppCompatActivity() {
     })
 
     category.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
-        Meme.Category.values().map { it.name }).apply {
+        Category.values().map { it.name }).apply {
       setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
 
@@ -86,7 +87,7 @@ class MemeActivity : AppCompatActivity() {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         val id = intent.getStringExtra(Intent.EXTRA_SHORTCUT_ID)
         if (id?.isNotEmpty() == true) {
-          category.setSelection(Meme.Category.positionFor(id))
+          category.setSelection(Category.positionFor(id))
         }
       }
     }
@@ -124,7 +125,7 @@ class MemeActivity : AppCompatActivity() {
     } else {
       memeTitleLayout.error = null
     }
-    val meme = Meme(memeTitle.text.toString(), memeUri.tag.toString(), Meme.Category.values()[category.selectedItemPosition])
+    val meme = Meme(memeTitle.text.toString(), memeUri.tag.toString(), Category.values()[category.selectedItemPosition])
     MemeRepo.add(meme)
     return true
   }

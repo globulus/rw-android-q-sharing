@@ -38,6 +38,7 @@ import android.widget.GridView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.raywenderlich.android.memerepo.R
+import com.raywenderlich.android.memerepo.model.Category
 import com.raywenderlich.android.memerepo.model.Meme
 import com.raywenderlich.android.memerepo.storage.MemeRepo
 
@@ -61,7 +62,7 @@ class MemeCollectionFragment : Fragment() {
   companion object {
     private const val ARG_CATEGORY = "category"
 
-    fun newInstance(category: Meme.Category): MemeCollectionFragment {
+    fun newInstance(category: Category): MemeCollectionFragment {
       return MemeCollectionFragment().apply {
         arguments = Bundle().apply {
           putSerializable(ARG_CATEGORY, category)
