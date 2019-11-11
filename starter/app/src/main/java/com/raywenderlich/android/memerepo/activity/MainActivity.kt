@@ -36,13 +36,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.raywenderlich.android.memerepo.R
 import com.raywenderlich.android.memerepo.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.concurrent.Executors
-
-private val IO_EXECUTOR = Executors.newSingleThreadExecutor()
-
-fun runOnIOThread(action: () -> Unit) {
-  IO_EXECUTOR.execute(action)
-}
 
 class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,13 +48,5 @@ class MainActivity : AppCompatActivity() {
     fab.setOnClickListener {
       startActivity(Intent(this, MemeActivity::class.java))
     }
-
-//    ShareUtil.publishMemeShareShortcuts(this)
   }
-
-  override fun onDestroy() {
-    super.onDestroy()
-//    ShareUtil.unPublishMemeShareShortcuts(this)
-  }
-
 }

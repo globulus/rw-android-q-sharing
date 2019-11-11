@@ -41,10 +41,7 @@ import com.raywenderlich.android.memerepo.model.Meme
 
 object MemeRepo {
     private const val KEY = "allMemes"
-    private val DEFAULTS = mutableListOf<Meme>(
-//        Meme("Classic", "https://i.imgflip.com/2jcns7.jpg", Meme.Category.CLASSIC),
-//        Meme("Dank", "https://pics.me.me/when-you-show-her-your-dank-meme-collection-for-the-14571318.png", Meme.Category.DANK)
-    )
+    private val DEFAULTS = mutableListOf<Meme>()
     private lateinit var prefs: SharedPreferences
     private val memes = MutableLiveData<List<Meme>>()
     private val gson = Gson()

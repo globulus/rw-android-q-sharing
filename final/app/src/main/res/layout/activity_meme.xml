@@ -24,13 +24,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:padding="@dimen/meme_activity_padding">
 
     <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/memeTitleLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="@string/title" >
+      android:hint="@string/title"
+      android:layout_marginBottom="@dimen/small_margin" >
 
       <EditText
         android:id="@+id/memeTitle"
@@ -43,7 +45,8 @@
       android:id="@+id/memeUrlLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="@string/url" >
+      android:hint="@string/url"
+      android:layout_marginBottom="@dimen/small_margin" >
 
       <EditText
         android:id="@+id/memeUri"
@@ -56,7 +59,8 @@
       android:id="@+id/imagePreview"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:scaleType="centerCrop" />
+      android:scaleType="centerCrop"
+      android:layout_marginBottom="@dimen/small_margin" />
 
     <Spinner
       android:id="@+id/category"

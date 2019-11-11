@@ -51,7 +51,8 @@ class MemesAdapter(private val context: Context) : BaseAdapter() {
     }
 
   override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-    val cv = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_meme, null).apply {
+    val cv = convertView
+        ?: LayoutInflater.from(context).inflate(R.layout.item_meme, parent, false).apply {
       tag = ViewHolder(findViewById(R.id.image), findViewById(R.id.title))
     }
     val viewHolder = cv.tag as ViewHolder
@@ -75,11 +76,7 @@ class MemesAdapter(private val context: Context) : BaseAdapter() {
                    private val title: TextView) {
     fun bind(view: View, meme: Meme) {
       title.text = meme.title
-      Picasso.get()
-          .load(meme.url)
-          .placeholder(R.drawable.splash_background)
-          .error(R.drawable.ic_launcher_foreground)
-          .into(image)
+      Picasso.get().load(meme.url).into(image)
       view.setOnClickListener {
         ShareUtil.shareMeme(view.context, meme)
       }

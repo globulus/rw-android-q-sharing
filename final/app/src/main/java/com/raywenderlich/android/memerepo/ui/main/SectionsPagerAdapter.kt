@@ -34,7 +34,6 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.raywenderlich.android.memerepo.R
 import com.raywenderlich.android.memerepo.model.Category
 
 class SectionsPagerAdapter(private val context: Context,
@@ -46,10 +45,7 @@ class SectionsPagerAdapter(private val context: Context,
   }
 
   override fun getPageTitle(position: Int): CharSequence? {
-    return context.getString(when (getCategory(position)) {
-      Category.CLASSIC -> R.string.classic
-      Category.DANK -> R.string.dank
-    })
+    return context.getString(getCategory(position).resId)
   }
 
   override fun getCount(): Int {

@@ -3,7 +3,6 @@
   xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <item android:id="@+id/addMeme"
-    android:title="@string/add_meme"
-    app:showAsAction="always"
-    android:icon="@android:drawable/ic_menu_add" />
+    android:title="@string/save"
+    app:showAsAction="always" />
 </menu>

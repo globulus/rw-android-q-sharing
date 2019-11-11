@@ -18,9 +18,6 @@
       android:name=".activity.MainActivity"
       android:label="@string/title_activity_main"
       android:theme="@style/AppTheme.NoActionBar">
-<!--      <meta-data-->
-<!--        android:name="android.app.shortcuts"-->
-<!--        android:resource="@xml/shortcuts" />-->
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -35,26 +32,7 @@
       <meta-data
         android:name="android.support.PARENT_ACTIVITY"
         android:value="com.raywenderlich.android.memerepo.activity.MainActivity" />
-<!--      <meta-data-->
-<!--        android:name="android.service.chooser.chooser_target_service"-->
-<!--        android:value="androidx.sharetarget.ChooserTargetServiceCompat" />-->
-<!--      <intent-filter>-->
-<!--        <action android:name="android.intent.action.SEND" />-->
-<!--        <category android:name="android.intent.category.DEFAULT" />-->
-<!--        <data android:mimeType="image/*" />-->
-<!--      </intent-filter>-->
     </activity>
-
-<!--    <provider-->
-<!--      android:name="androidx.core.content.FileProvider"-->
-<!--      android:authorities="com.raywenderlich.android.memerepo.FileProvider"-->
-<!--      android:exported="false"-->
-<!--      android:grantUriPermissions="true">-->
-<!--      <meta-data-->
-<!--        android:name="android.support.FILE_PROVIDER_PATHS"-->
-<!--        android:resource="@xml/file_paths">-->
-<!--      </meta-data>-->
-<!--    </provider>-->
 
   </application>
 

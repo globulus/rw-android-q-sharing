@@ -65,7 +65,9 @@ class MemeActivity : AppCompatActivity() {
 
     memeUri.addTextChangedListener(object : TextWatcher {
       override fun afterTextChanged(s: Editable?) {
-        Picasso.get().load(memeUri.text.toString()).into(imagePreview)
+        if (s?.isNotEmpty() == true) {
+          Picasso.get().load(memeUri.text.toString()).into(imagePreview)
+        }
       }
 
       override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
@@ -74,14 +76,13 @@ class MemeActivity : AppCompatActivity() {
     })
 
     category.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
-        Category.values().map { it.name }).apply {
+        Category.values().map { getString(it.resId) }).apply {
       setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
 
     if (intent?.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true) {
       (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
         memeUri.setText(it.toString())
-//            Picasso.get().load(it).into(imagePreview)
       }
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
