@@ -36,11 +36,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.GridView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.raywenderlich.android.memerepo.R
 import com.raywenderlich.android.memerepo.model.Category
-import com.raywenderlich.android.memerepo.model.Meme
-import com.raywenderlich.android.memerepo.storage.MemeRepo
 
 class MemeCollectionFragment : Fragment() {
 
@@ -53,9 +50,9 @@ class MemeCollectionFragment : Fragment() {
         ?: throw IllegalStateException("Category must be passed!")
     val adapter = MemesAdapter(root.context)
     root.findViewById<GridView>(R.id.gridView).adapter = adapter
-    MemeRepo.allMemes.observe(this, Observer<List<Meme>> {
-      adapter.memes = it.filter { meme -> meme.category == category }
-    })
+//    MemeRepo.allMemes.observe(this, Observer<List<Meme>> {
+//      adapter.memes = it.filter { meme -> meme.category == category }
+//    })
     return root
   }
 

@@ -38,59 +38,63 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Parcelable
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.raywenderlich.android.memerepo.R
 import com.raywenderlich.android.memerepo.model.Category
 import com.raywenderlich.android.memerepo.model.Meme
 import com.raywenderlich.android.memerepo.storage.MemeRepo
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_meme.*
+import net.globulus.kotlinui.*
+import net.globulus.kotlinui.widgets.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
 class MemeActivity : AppCompatActivity() {
 
+  private lateinit var box: Box
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_meme)
-    setSupportActionBar(toolbar)
+//    setContentView(R.layout.activity_meme)
+//    setSupportActionBar(toolbar)
 
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//    supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-    memeUri.addTextChangedListener(object : TextWatcher {
-      override fun afterTextChanged(s: Editable?) {
-        if (s?.isNotEmpty() == true) {
-          Picasso.get().load(memeUri.text.toString()).into(imagePreview)
-        }
-      }
+//    memeUri.addTextChangedListener(object : TextWatcher {
+//      override fun afterTextChanged(s: Editable?) {
+//        if (s?.isNotEmpty() == true) {
+//          Picasso.get().load(memeUri.text.toString()).into(imagePreview)
+//        }
+//      }
+//
+//      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//
+//      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+//    })
+//
+//    category.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
+//        Category.values().map { getString(it.resId) }).apply {
+//      setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//    }
 
-      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-    })
-
-    category.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
-        Category.values().map { getString(it.resId) }).apply {
-      setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    }
+    box = Box(this)
+    setContentView(box)
 
     if (intent?.action == Intent.ACTION_SEND) {
       if (intent.type?.startsWith("image/") == true) {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
-          memeUri.setText(it.toString())
+          box.pasteUrl = it.toString()
+          Picasso.get().load(it).into(box.image.view)
         }
       }
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         val id = intent.getStringExtra(Intent.EXTRA_SHORTCUT_ID)
         if (id?.isNotEmpty() == true) {
-          category.setSelection(Category.positionFor(id))
+          box.dank = Category.positionFor(id) == 1
         }
       }
     }
@@ -117,35 +121,65 @@ class MemeActivity : AppCompatActivity() {
   private fun saveMeme(): Boolean {
     val saved = saveJpeg()
     if (!saved) {
-      memeUrlLayout.error = getString(R.string.url_error)
+      box.urlInput.error(R.string.url_error)
       return false
     } else {
-      memeUrlLayout.error = null
+      box.urlInput.error(0)
     }
-    if (memeTitle.text.isEmpty()) {
-      memeTitleLayout.error = getString(R.string.title_error)
+    if (box.title.isEmpty()) {
+      box.titleInput.error(R.string.title_error)
       return false
     } else {
-      memeTitleLayout.error = null
+      box.titleInput.error(0)
     }
-    val meme = Meme(memeTitle.text.toString(), memeUri.tag.toString(), Category.values()[category.selectedItemPosition])
+    val meme = Meme(box.title, box.uri!!, Category.values()[if (box.dank) 1 else 0])
     MemeRepo.add(meme)
     return true
   }
 
   private fun saveJpeg(): Boolean {
-    return (imagePreview.drawable as? BitmapDrawable)?.bitmap?.let {
+    return (box.image.view.drawable as? BitmapDrawable)?.bitmap?.let {
       try {
         val file = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "meme_${System.currentTimeMillis()}.jpg")
         val out = FileOutputStream(file)
         it.compress(Bitmap.CompressFormat.JPEG, 90, out)
         out.close()
         val bmpUri = Uri.fromFile(file)
-        memeUri.tag = bmpUri?.toString()
+        box.uri = bmpUri?.toString()
       } catch (e: IOException) {
         e.printStackTrace()
       }
       true
     } ?: false
+  }
+
+  class Box(owner: MemeActivity) : KViewBox(owner) {
+
+    lateinit var titleInput: KMaterialTextField
+    lateinit var urlInput: KMaterialTextField
+    lateinit var image: KImage
+
+    var title = ""
+    var pasteUrl by state("")
+    var url = ""
+    var dank = false
+    var uri: String? = null
+
+    override val root = rootToolbarColumn {
+      titleInput = materialTextField { textField(::title) }
+          .hint(R.string.title)
+          .margins(0, 0, 0, 8)
+      urlInput = materialTextField { textField(::url) }
+          .hint(R.string.url)
+          .margins(0, 0, 0, 8)
+      urlInput.textField.bindTo(::pasteUrl)
+      image = image().margins(0, 0, 0, 8)
+      checkBox(R.string.dank, ::dank)
+      button(R.string.save) {
+        if (owner.saveMeme()) {
+          owner.finish()
+        }
+      }
+    }
   }
 }

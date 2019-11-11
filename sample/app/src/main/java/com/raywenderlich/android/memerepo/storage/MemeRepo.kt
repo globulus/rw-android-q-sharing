@@ -32,30 +32,31 @@ package com.raywenderlich.android.memerepo.storage
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.raywenderlich.android.memerepo.R
 import com.raywenderlich.android.memerepo.model.Meme
+import net.globulus.kotlinui.Stateful
+import net.globulus.kotlinui.StatefulProducer
+import net.globulus.kotlinui.state
 
-object MemeRepo {
+object MemeRepo : StatefulProducer {
+
+    override val stateful = Stateful.default()
+
     private const val KEY = "allMemes"
-    private val DEFAULTS = mutableListOf<Meme>()
     private lateinit var prefs: SharedPreferences
-    private val memes = MutableLiveData<List<Meme>>()
+    internal var memes: List<Meme> by state(emptyList())
     private val gson = Gson()
     private val type = object : TypeToken<MutableList<Meme>>() { }.type
 
     fun load(context: Context) {
         prefs = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        memes.value = gson.fromJson(prefs.getString(KEY, null), type) ?: DEFAULTS
+        memes = gson.fromJson(prefs.getString(KEY, null), type) ?: emptyList()
     }
 
     fun add(meme: Meme) {
-        memes.value = (memes.value ?: DEFAULTS) + meme
-        prefs.edit().putString(KEY, gson.toJson(memes.value, type)).apply()
+        memes = memes + meme
+        prefs.edit().putString(KEY, gson.toJson(memes, type)).apply()
     }
-
-    val allMemes: LiveData<List<Meme>> = memes
 }

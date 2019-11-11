@@ -296,3 +296,10 @@ sample/.idea/misc.xml
 sample/.idea/modules.xml
 sample/.idea/runConfigurations.xml
 sample/.idea/vcs.xml
+sample/.idea/libraries/Gradle____local_aars____Users_gordanglavas_Desktop_github_rw_android_q_sharing_sample_app_libs_kotlinui_release_aar_unspecified_jar.xml
+sample/.idea/libraries/Gradle__com_jakewharton_rxrelay2_rxrelay_2_1_1_jar.xml
+sample/.idea/libraries/Gradle__io_reactivex_rxjava2_rxandroid_2_1_1_aar.xml
+sample/.idea/libraries/Gradle__io_reactivex_rxjava2_rxjava_2_2_6_jar.xml
+sample/.idea/libraries/Gradle__io_reactivex_rxjava3_rxjava_3_0_0_RC3_jar.xml
+sample/.idea/libraries/Gradle__org_jetbrains_kotlin_kotlin_reflect_1_3_50_jar.xml
+sample/.idea/libraries/Gradle__org_reactivestreams_reactive_streams_1_0_3_jar.xml
