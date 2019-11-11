@@ -57,7 +57,8 @@ object ShareUtil {
       putExtra(Intent.EXTRA_TITLE, meme.title)
       val uri = Uri.parse(meme.url)
       putExtra(Intent.EXTRA_STREAM, uri)
-      clipData = ClipData.newUri(context.contentResolver, "SMTH",
+      clipData = ClipData.newUri(context.contentResolver,
+          context.getString(R.string.app_name),
           FileProvider.getUriForFile(context, FILE_PROVIDER, File(meme.url)))
       flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
     }
@@ -76,9 +77,10 @@ object ShareUtil {
   }
 
   private fun Category.toShortcut(context: Context): ShortcutInfoCompat {
+    val label = context.getString(resId)
     return ShortcutInfoCompat.Builder(context, id)
-        .setShortLabel(name)
-        .setLongLabel(name + "LONG")
+        .setShortLabel(label)
+        .setLongLabel(context.getString(R.string.new_meme, label))
         .setPerson(Person.Builder()
             .setName(name)
             .setKey(id)

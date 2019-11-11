@@ -69,7 +69,7 @@ class MemeActivity : AppCompatActivity() {
 
       override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
-      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {  }
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
     })
 
     category.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,

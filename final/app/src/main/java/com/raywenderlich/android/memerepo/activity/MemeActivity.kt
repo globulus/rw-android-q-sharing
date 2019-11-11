@@ -70,9 +70,9 @@ class MemeActivity : AppCompatActivity() {
         }
       }
 
-      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {  }
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
 
     category.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
@@ -80,9 +80,11 @@ class MemeActivity : AppCompatActivity() {
       setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
 
-    if (intent?.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true) {
-      (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
-        memeUri.setText(it.toString())
+    if (intent?.action == Intent.ACTION_SEND) {
+      if (intent.type?.startsWith("image/") == true) {
+        (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
+          memeUri.setText(it.toString())
+        }
       }
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

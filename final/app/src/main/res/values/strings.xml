@@ -4,6 +4,7 @@
   <string name="title_activity_meme">Meme</string>
   <string name="classic">Classic</string>
   <string name="dank">Dank</string>
+  <string name="new_meme">New %s meme</string>
   <string name="preference_file_key">com.raywenderlich.android.memerepo.PREFERENCES_FILE</string>
   <string name="title">Title</string>
   <string name="url">URL</string>
