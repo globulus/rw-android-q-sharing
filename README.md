@@ -1,4 +1,4 @@
 # rw-android-q-sharing
 
-[Starter project](starter/)
-[Sample project](sample/)
+* [Starter project](starter/)
+* [Sample project](sample/)
