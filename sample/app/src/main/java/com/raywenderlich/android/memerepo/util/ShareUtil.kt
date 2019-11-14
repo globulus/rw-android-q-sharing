@@ -77,7 +77,7 @@ object ShareUtil {
   }
 
   private fun Category.toShortcut(context: Context): ShortcutInfoCompat {
-    val label = context.getString(resId)
+    val label = context.getString(stringResId)
     return ShortcutInfoCompat.Builder(context, id)
         .setShortLabel(label)
         .setLongLabel(context.getString(R.string.new_meme, label))
@@ -85,7 +85,7 @@ object ShareUtil {
             .setName(name)
             .setKey(id)
             .build())
-        .setIcon(IconCompat.createWithResource(context, R.drawable.ic_launcher_foreground))
+        .setIcon(IconCompat.createWithResource(context, imageResId))
         .setCategories(setOf(SHARE_CATEGORY))
         .setIntent(Intent(context, MemeActivity::class.java).apply {
           action = Intent.ACTION_SEND

@@ -30,12 +30,14 @@
 
 package com.raywenderlich.android.memerepo.model
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.raywenderlich.android.memerepo.R
 
-enum class Category(@StringRes val resId: Int) {
-  CLASSIC(R.string.classic),
-  DANK(R.string.dank);
+enum class Category(@StringRes val stringResId: Int,
+                    @DrawableRes val imageResId: Int) {
+    CLASSIC(R.string.classic, R.drawable.classic),
+    DANK(R.string.dank, R.drawable.dank);
 
   val id = this::class.java.name + toString()
 

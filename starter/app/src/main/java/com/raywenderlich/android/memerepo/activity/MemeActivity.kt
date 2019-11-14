@@ -73,7 +73,7 @@ class MemeActivity : AppCompatActivity() {
     })
 
     category.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
-        Category.values().map { getString(it.resId) }).apply {
+        Category.values().map { getString(it.stringResId) }).apply {
       setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
   }

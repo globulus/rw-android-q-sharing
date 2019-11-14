@@ -45,7 +45,7 @@ class SectionsPagerAdapter(private val context: Context,
   }
 
   override fun getPageTitle(position: Int): CharSequence? {
-    return context.getString(getCategory(position).resId)
+    return context.getString(getCategory(position).stringResId)
   }
 
   override fun getCount(): Int {
