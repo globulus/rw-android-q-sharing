@@ -58,27 +58,6 @@ class MemeActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-//    setContentView(R.layout.activity_meme)
-//    setSupportActionBar(toolbar)
-
-//    supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-//    memeUri.addTextChangedListener(object : TextWatcher {
-//      override fun afterTextChanged(s: Editable?) {
-//        if (s?.isNotEmpty() == true) {
-//          Picasso.get().load(memeUri.text.toString()).into(imagePreview)
-//        }
-//      }
-//
-//      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-//
-//      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-//    })
-//
-//    category.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
-//        Category.values().map { getString(it.resId) }).apply {
-//      setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//    }
 
     box = Box(this)
     setContentView(box)
@@ -175,10 +154,9 @@ class MemeActivity : AppCompatActivity() {
       urlInput.textField.bindTo(::pasteUrl)
       image = image().margins(0, 0, 0, 8)
       checkBox(R.string.dank, ::dank)
-      button(R.string.save) {
-        if (owner.saveMeme()) {
-          owner.finish()
-        }
+      toolbar.apply {
+        title = context.getString(R.string.title_activity_meme)
+        owner.setSupportActionBar(this)
       }
     }
   }

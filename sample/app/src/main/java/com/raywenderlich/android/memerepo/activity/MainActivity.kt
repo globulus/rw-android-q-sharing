@@ -30,13 +30,16 @@
 
 package com.raywenderlich.android.memerepo.activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 import com.raywenderlich.android.memerepo.R
 import com.raywenderlich.android.memerepo.model.Category
 import com.raywenderlich.android.memerepo.storage.MemeRepo
 import com.raywenderlich.android.memerepo.util.ShareUtil
 import com.squareup.picasso.Picasso
+import net.globulus.kotlinui.applyOnView
 import net.globulus.kotlinui.bindTo
 import net.globulus.kotlinui.margins
 import net.globulus.kotlinui.onClickListener
@@ -48,32 +51,30 @@ class MainActivity : AppCompatActivity() {
 
     setContentTabs(
         Category.values().map { it.resId }.toTypedArray(),
-        Category.values().toList()) { category ->
-      grid(MemeRepo.memes.filter { it.category == category }) { meme ->
+        Category.values().toList()
+    ) { category ->
+      grid({ MemeRepo.memes.filter { it.category == category } }) { meme ->
         column {
           val img = image()
           Picasso.get().load(meme.url).into(img.view)
-          text(meme.title).margins(10)
+          text(meme.title).margins(10).applyOnView {
+            gravity = Gravity.CENTER
+          }
         }.onClickListener {
-          ShareUtil.shareMeme(this@MainActivity, meme)
+          ShareUtil.shareMeme(context, meme)
         }
       }.bindTo(MemeRepo, MemeRepo::memes)
-    }.toolbar.apply {
-      title = getString(R.string.app_name)
-      setSupportActionBar(this)
+    }.apply {
+      toolbar.apply {
+        title = getString(R.string.app_name)
+        setSupportActionBar(this)
+      }
+      fab {
+        startActivity(Intent(context, MemeActivity::class.java))
+      }
     }
 
-//    setContentView(R.layout.activity_main)
-//
-//    val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-//    viewPager.adapter = sectionsPagerAdapter
-//    tabs.setupWithViewPager(viewPager)
-//
-//    fab.setOnClickListener {
-//      startActivity(Intent(this, MemeActivity::class.java))
-//    }
-
-    ShareUtil.publishMemeShareShortcuts(this)
+      ShareUtil.publishMemeShareShortcuts(this)
   }
 
   override fun onDestroy() {
